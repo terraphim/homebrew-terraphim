@@ -1,30 +1,30 @@
 class TerraphimServer < Formula
   desc "Privacy-first AI assistant HTTP server with semantic search"
   homepage "https://github.com/terraphim/terraphim-ai"
-  url "https://github.com/terraphim/terraphim-ai/archive/refs/tags/v1.0.0.tar.gz"
-  sha256 "48a6d07139bab943993c4535cb970aa64169ddfb91072d6f655e295f0d229233"
+  version "1.4.0"
   license "Apache-2.0"
-  head "https://github.com/terraphim/terraphim-ai.git", branch: "main"
 
-  depends_on "rust" => :build
-  depends_on "pkg-config" => :build
-  depends_on "openssl@3"
+  on_macos do
+    url "https://github.com/terraphim/terraphim-ai/releases/download/v1.4.0/terraphim_server-universal-apple-darwin"
+    sha256 "001b33efba176e9e419c41f08fa508590ecf6a070ff6cf7effe8eb10f330c336"
+  end
+
+  on_linux do
+    url "https://github.com/terraphim/terraphim-ai/releases/download/v1.4.0/terraphim_server-x86_64-unknown-linux-gnu"
+    sha256 "ae21177b73f48c3391a3f434dc84e1d65e8092a6e3f04e2a34580187fd147759"
+  end
 
   def install
-    system "cargo", "build", "--release", "--package", "terraphim_server"
-    bin.install "target/release/terraphim_server"
-
-    # Install default configuration files
-    (etc/"terraphim").mkpath
-    cp_r Dir["terraphim_server/default/*.json"], etc/"terraphim"
+    if OS.mac?
+      bin.install "terraphim_server-universal-apple-darwin" => "terraphim_server"
+    else
+      bin.install "terraphim_server-x86_64-unknown-linux-gnu" => "terraphim_server"
+    end
   end
 
   def caveats
     <<~EOS
       Terraphim Server has been installed.
-
-      Configuration files are located in:
-        #{etc}/terraphim/
 
       To start the server:
         terraphim_server
@@ -41,7 +41,6 @@ class TerraphimServer < Formula
     keep_alive true
     log_path var/"log/terraphim-server.log"
     error_log_path var/"log/terraphim-server-error.log"
-    working_dir HOMEBREW_PREFIX
   end
 
   test do

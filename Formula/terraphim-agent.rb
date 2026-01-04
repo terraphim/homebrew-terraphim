@@ -1,18 +1,25 @@
 class TerraphimAgent < Formula
   desc "Interactive TUI and REPL for Terraphim AI semantic search"
   homepage "https://github.com/terraphim/terraphim-ai"
-  url "https://github.com/terraphim/terraphim-ai/archive/refs/tags/v1.0.0.tar.gz"
-  sha256 "48a6d07139bab943993c4535cb970aa64169ddfb91072d6f655e295f0d229233"
+  version "1.4.0"
   license "Apache-2.0"
-  head "https://github.com/terraphim/terraphim-ai.git", branch: "main"
 
-  depends_on "rust" => :build
-  depends_on "pkg-config" => :build
-  depends_on "openssl@3"
+  on_macos do
+    url "https://github.com/terraphim/terraphim-ai/releases/download/v1.4.0/terraphim-agent-universal-apple-darwin"
+    sha256 "484b856e1259dfc87e6c47a13e2b77180ac0be32ed91e8c9bca8584b393a8a38"
+  end
+
+  on_linux do
+    url "https://github.com/terraphim/terraphim-ai/releases/download/v1.4.0/terraphim-agent-x86_64-unknown-linux-gnu"
+    sha256 "c7d7a5bf01685c1eed2cf3bf024e35f5abc5152d28bb0dfa0bb158de6c17b5e8"
+  end
 
   def install
-    system "cargo", "build", "--release", "--package", "terraphim_agent", "--features", "repl-full"
-    bin.install "target/release/terraphim-agent"
+    if OS.mac?
+      bin.install "terraphim-agent-universal-apple-darwin" => "terraphim-agent"
+    else
+      bin.install "terraphim-agent-x86_64-unknown-linux-gnu" => "terraphim-agent"
+    end
   end
 
   def caveats
