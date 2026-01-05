@@ -1,17 +1,17 @@
 class TerraphimServer < Formula
   desc "Privacy-first AI assistant HTTP server with semantic search"
   homepage "https://github.com/terraphim/terraphim-ai"
-  version "1.4.0"
+  version "1.4.3"
   license "Apache-2.0"
 
   on_macos do
-    url "https://github.com/terraphim/terraphim-ai/releases/download/v1.4.0/terraphim_server-universal-apple-darwin"
-    sha256 "001b33efba176e9e419c41f08fa508590ecf6a070ff6cf7effe8eb10f330c336"
+    url "https://github.com/terraphim/terraphim-ai/releases/download/v1.4.3/terraphim_server-universal-apple-darwin"
+    sha256 "4c5934c87251e541166435929e312175f0f6452a25ccccebc07aeab13f44c1bd"
   end
 
   on_linux do
-    url "https://github.com/terraphim/terraphim-ai/releases/download/v1.4.0/terraphim_server-x86_64-unknown-linux-gnu"
-    sha256 "ae21177b73f48c3391a3f434dc84e1d65e8092a6e3f04e2a34580187fd147759"
+    url "https://github.com/terraphim/terraphim-ai/releases/download/v1.4.3/terraphim_server-x86_64-unknown-linux-gnu"
+    sha256 "LINUX_SHA_PLACEHOLDER"
   end
 
   def install
@@ -20,20 +20,6 @@ class TerraphimServer < Formula
     else
       bin.install "terraphim_server-x86_64-unknown-linux-gnu" => "terraphim_server"
     end
-  end
-
-  def caveats
-    <<~EOS
-      Terraphim Server has been installed.
-
-      To start the server:
-        terraphim_server
-
-      Or run as a background service:
-        brew services start terraphim-server
-
-      The server will be available at http://localhost:8000
-    EOS
   end
 
   service do
