@@ -6,7 +6,7 @@ class TerraphimServer < Formula
 
   on_macos do
     url "https://github.com/terraphim/terraphim-ai/releases/download/v1.10.0/terraphim_server-universal-apple-darwin"
-    sha256 "7205224773e94c261fd25ebac12b4f134ab4edb841ca5fcd8237bc139e94568e"
+    sha256 "c84252c49773af39f5873ddc3aea7916368d4fbf897c1fdf2d918de4067a0613"
   end
 
   on_linux do
