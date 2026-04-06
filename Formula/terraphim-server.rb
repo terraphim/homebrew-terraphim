@@ -1,16 +1,16 @@
 class TerraphimServer < Formula
   desc "Privacy-first AI assistant HTTP server with semantic search"
   homepage "https://github.com/terraphim/terraphim-ai"
-  version "1.16.7"
+  version "1.16.8"
   license "Apache-2.0"
 
   on_macos do
-    url "https://github.com/terraphim/terraphim-ai/releases/download/v1.16.7/terraphim_server-universal-apple-darwin"
-    sha256 "701e5dc279662d9a575bb2f1b858c04adf74421bd907ca9928f9f9e3d585d438"
+    url "https://github.com/terraphim/terraphim-ai/releases/download/v1.16.8/terraphim_server-universal-apple-darwin"
+    sha256 "5ddd3ea1505e5c4aae92f1ba3701e24b92e861ef200d81bc581cec762722fe33"
   end
 
   on_linux do
-    url "https://github.com/terraphim/terraphim-ai/releases/download/v1.16.7/terraphim_server-x86_64-unknown-linux-gnu"
+    url "https://github.com/terraphim/terraphim-ai/releases/download/v1.16.8/terraphim_server-x86_64-unknown-linux-gnu"
     sha256 "LINUX_SHA_PLACEHOLDER"
   end
 
