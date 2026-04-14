@@ -1,17 +1,17 @@
 class TerraphimAgent < Formula
   desc "Interactive TUI and REPL for Terraphim AI semantic search"
   homepage "https://github.com/terraphim/terraphim-ai"
-  version "1.16.33"
+  version "1.16.34"
   license "Apache-2.0"
 
   on_macos do
-    url "https://github.com/terraphim/terraphim-ai/releases/download/v1.16.33/terraphim-agent-universal-apple-darwin"
-    sha256 "4ac9f177392fdf3db7c4d07452354a5d628683ada20f5242617cdd039498ba5e"
+    url "https://github.com/terraphim/terraphim-ai/releases/download/v1.16.34/terraphim-agent-universal-apple-darwin"
+    sha256 "9bb78464ac267b2f9ef3f665bce7d8c8c477eff647b6ea258140a7c7bcf28110"
   end
 
   on_linux do
-    url "https://github.com/terraphim/terraphim-ai/releases/download/v1.16.33/terraphim-agent-x86_64-unknown-linux-gnu"
-    sha256 "f0ca34b7ef09f10a587380fef68e8adc32a3533805608c355436ed58e2fa29c7"
+    url "https://github.com/terraphim/terraphim-ai/releases/download/v1.16.34/terraphim-agent-x86_64-unknown-linux-gnu"
+    sha256 "58f4d608b2f41ac34142cc29d5502ba2d81f2e92d6d953e262f6efeb7bf0b44f"
   end
 
   def install
