@@ -6,12 +6,12 @@ class TerraphimAgent < Formula
 
   on_macos do
     url "https://github.com/terraphim/terraphim-ai/releases/download/v1.19.3/terraphim-agent-universal-apple-darwin"
-    sha256 "dc626b83fe023f53bc9eb3e3c47374f6bbc366e0520803c7e3de94f52af9d69b"
+    sha256 "0f3db394a79a7e87b8028932d788b46fe0641439ce1e8df9798860158b1f8dd7"
   end
 
   on_linux do
     url "https://github.com/terraphim/terraphim-ai/releases/download/v1.19.3/terraphim-agent-x86_64-unknown-linux-gnu"
-    sha256 "0047e268af71ffbc779f19385e54481149c06deec6bb10f349d15402276f8a87"
+    sha256 "c04472704db63214a8a2740e311e9b82c6f2a4d46a9e2f0bc9aa176daa2058fb"
   end
 
   def install
