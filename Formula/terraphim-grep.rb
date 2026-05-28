@@ -1,17 +1,17 @@
 class TerraphimGrep < Formula
   desc "Intelligent hybrid grep with knowledge-graph boosting and LLM fallback"
   homepage "https://github.com/terraphim/terraphim-ai"
-  version "1.20.0"
+  version "1.20.2"
   license "MIT"
 
   on_macos do
-    url "https://github.com/terraphim/terraphim-ai/releases/download/v1.20.0/terraphim-grep-universal-apple-darwin"
-    sha256 "cd6e3b52f313b61afe18a03926e3137949bd063fff62b178bb5bc47345c6cb28"
+    url "https://github.com/terraphim/terraphim-ai/releases/download/v1.20.2/terraphim-grep-universal-apple-darwin"
+    sha256 "87e2c219602a7f766edb46a71bbd940e266610dd4aa11a23520013e1c6c69ae5"
   end
 
   on_linux do
-    url "https://github.com/terraphim/terraphim-ai/releases/download/v1.20.0/terraphim-grep-x86_64-unknown-linux-gnu"
-    sha256 "ecd29166e1590d80ca2fc7a037dc3e48f2dd448027ee1399149f726906b9dacb"
+    url "https://github.com/terraphim/terraphim-ai/releases/download/v1.20.2/terraphim-grep-x86_64-unknown-linux-gnu"
+    sha256 "13c967f7df41b8a93f35e0efc1903acf2da8237b6837d2f5d68907b0b98d0933"
   end
 
   def install
