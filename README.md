@@ -10,7 +10,8 @@ brew tap terraphim/terraphim
 
 # Install tools
 brew install terraphim-server   # HTTP API server
-brew install terraphim-agent    # Interactive TUI/REPL
+brew install terraphim-agent    # Agent memory, learning, and session commands
+brew install terraphim-grep     # Local code and documentation search
 ```
 
 ## Available Formulas
@@ -18,7 +19,8 @@ brew install terraphim-agent    # Interactive TUI/REPL
 | Formula | Description |
 |---------|-------------|
 | `terraphim-server` | Privacy-first AI assistant HTTP server with semantic search |
-| `terraphim-agent` | Interactive TUI and REPL for semantic knowledge graph search |
+| `terraphim-agent` | Agent memory, learning, session, and knowledge graph workflows |
+| `terraphim-grep` | Local text and knowledge-graph-assisted search |
 
 ## Usage
 
@@ -102,4 +104,3 @@ xattr -d com.apple.quarantine $(which terraphim_server)
 ## License
 
 Apache-2.0
-
