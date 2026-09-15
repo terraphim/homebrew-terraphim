@@ -86,6 +86,13 @@ codesign --verify --verbose=2 "$(which terraphim-agent)"
 codesign --verify --verbose=2 "$(which terraphim-grep)"
 ```
 
+The v1.21.14 signatures chain through Apple's Developer ID G1 intermediate.
+If an otherwise checksum-matching binary reports an invalid signature, install
+the official Developer ID G1 intermediate from the
+[Apple PKI page](https://www.apple.com/certificateauthority/) and retry. Do not
+bypass Gatekeeper. The release workflow also verifies every macOS binary on a
+fresh GitHub-hosted macOS runner before publication.
+
 ## Links
 
 - [Client Repository](https://github.com/terraphim/terraphim-clients)

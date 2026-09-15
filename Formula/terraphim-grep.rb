@@ -28,5 +28,9 @@ class TerraphimGrep < Formula
   test do
     assert_match "terraphim", shell_output("#{bin}/terraphim-grep --version 2>&1")
     assert_match "Intelligent hybrid grep", shell_output("#{bin}/terraphim-grep --help 2>&1")
+    if OS.mac?
+      system "/usr/bin/codesign", "--verify", "--all-architectures", "--deep", "--strict",
+             bin/"terraphim-grep"
+    end
   end
 end
