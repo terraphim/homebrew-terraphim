@@ -1,6 +1,6 @@
 # Homebrew Tap for Terraphim AI
 
-This is the official [Homebrew](https://brew.sh/) tap for [Terraphim AI](https://github.com/terraphim/terraphim-ai) tools.
+This is the official [Homebrew](https://brew.sh/) tap for Terraphim tools.
 
 ## Installation
 
@@ -10,7 +10,8 @@ brew tap terraphim/terraphim
 
 # Install tools
 brew install terraphim-server   # HTTP API server
-brew install terraphim-agent    # Interactive TUI/REPL
+brew install terraphim-agent    # Agent memory, learning, and session commands
+brew install terraphim-grep     # Local code and documentation search
 ```
 
 ## Available Formulas
@@ -18,7 +19,8 @@ brew install terraphim-agent    # Interactive TUI/REPL
 | Formula | Description |
 |---------|-------------|
 | `terraphim-server` | Privacy-first AI assistant HTTP server with semantic search |
-| `terraphim-agent` | Interactive TUI and REPL for semantic knowledge graph search |
+| `terraphim-agent` | Agent memory, learning, session, and knowledge graph workflows |
+| `terraphim-grep` | Local text and knowledge-graph-assisted search |
 
 ## Usage
 
@@ -37,16 +39,16 @@ brew services info terraphim-server
 
 The server will be available at `http://localhost:8000`.
 
-### Terraphim Agent (TUI)
+### Terraphim Agent
 
 ```bash
-# Start interactive REPL
-terraphim-agent
+# Inspect the installed command surface
+terraphim-agent --help
+terraphim-agent learn --help
+terraphim-agent memory --help
 
-# Available commands:
-# /help           - Show all commands
-# /search "query" - Semantic search
-# /chat "message" - AI conversation
+# Search local code and documentation
+terraphim-grep --help
 ```
 
 ## Configuration
@@ -58,16 +60,7 @@ Configuration files are installed to:
 
 ```bash
 brew update
-brew upgrade terraphim-server terraphim-agent
-```
-
-## Building from HEAD
-
-To install the latest development version:
-
-```bash
-brew install --HEAD terraphim-server
-brew install --HEAD terraphim-agent
+brew upgrade terraphim-server terraphim-agent terraphim-grep
 ```
 
 ## Troubleshooting
@@ -82,24 +75,30 @@ export PKG_CONFIG_PATH="$(brew --prefix openssl@3)/lib/pkgconfig"
 brew reinstall terraphim-server
 ```
 
-### Gatekeeper blocks execution (unsigned binaries)
+### Verify downloaded binaries
 
-Current builds are unsigned. To allow execution:
+The macOS `terraphim-agent` and `terraphim-grep` binaries are signed with the
+Terraphim Developer ID. Homebrew also verifies the SHA-256 checksum before
+installation. Check the installed signatures with:
 
 ```bash
-# Right-click the app and select "Open", or:
-xattr -d com.apple.quarantine $(which terraphim_server)
+codesign --verify --verbose=2 "$(which terraphim-agent)"
+codesign --verify --verbose=2 "$(which terraphim-grep)"
 ```
 
-> Note: Signed and notarized binaries are coming soon!
+The v1.21.14 signatures chain through Apple's Developer ID G1 intermediate.
+If an otherwise checksum-matching binary reports an invalid signature, install
+the official Developer ID G1 intermediate from the
+[Apple PKI page](https://www.apple.com/certificateauthority/) and retry. Do not
+bypass Gatekeeper. The release workflow also verifies every macOS binary on a
+fresh GitHub-hosted macOS runner before publication.
 
 ## Links
 
-- [Main Repository](https://github.com/terraphim/terraphim-ai)
-- [Documentation](https://github.com/terraphim/terraphim-ai#readme)
-- [Issues](https://github.com/terraphim/terraphim-ai/issues)
+- [Client Repository](https://github.com/terraphim/terraphim-clients)
+- [Terraphim Skills](https://terraphim-skills.md/skills/)
+- [Issues](https://github.com/terraphim/terraphim-clients/issues)
 
 ## License
 
 Apache-2.0
-
