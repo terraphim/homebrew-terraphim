@@ -18,7 +18,6 @@ class TerraphimGrep < Formula
   )
   url "https://downloads.terraphim.ai/terraphim-grep/terraphim-grep-1.21.14-#{target}.tar.gz"
   mirror "https://github.com/terraphim/terraphim-clients/releases/download/v1.21.14/terraphim-grep-1.21.14-#{target}.tar.gz"
-  version "1.21.14"
   sha256 checksum
   license "MIT"
 
