@@ -10,14 +10,14 @@ class TerraphimAgent < Formula
     ),
   )
   checksum = on_system_conditional(
-    macos: "c00c3c6270cca93c31861e2e85395b21c71c97179e178260a9f6129bd93e34bc",
+    macos: "0a9e7eb47508d285f66966db7fd2bb36367ad847c0275a068796c7c382c107da",
     linux: on_arch_conditional(
-      arm:   "aa9881a85bf1227462c79c8c370e9506128575f9a7077267db0c67141b0d900b",
-      intel: "e45652a3e3763a976945b1a43a7ca2336f64d8db94aa8bd67633c7cfaf4b0627",
+      arm:   "f8530d963171e3f72b52b8b729653cafa5ae5e105e219f7ecec7b170037acaa7",
+      intel: "b6dec5834b96fa3178680b0804f5e6ce47a2a201e7f70e1e859b67359dd00ad4",
     ),
   )
-  url "https://downloads.terraphim.ai/terraphim-agent/terraphim-agent-1.21.14-#{target}.tar.gz"
-  mirror "https://github.com/terraphim/terraphim-clients/releases/download/v1.21.14/terraphim-agent-1.21.14-#{target}.tar.gz"
+  url "https://downloads.terraphim.ai/terraphim-agent/terraphim-agent-1.21.16-#{target}.tar.gz"
+  mirror "https://github.com/terraphim/terraphim-clients/releases/download/v1.21.16/terraphim-agent-1.21.16-#{target}.tar.gz"
   sha256 checksum
   license "Apache-2.0"
 
