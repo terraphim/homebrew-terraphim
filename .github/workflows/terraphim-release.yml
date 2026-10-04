@@ -1,0 +1,119 @@
+name: Terraphim managed release -> Homebrew
+
+# Receiver for the central coordinator's repository_dispatch
+# (event_type: terraphim-release, channel: homebrew_tap_pr). It verifies the
+# frozen release, renders the formulas with the Terraphim Homebrew outbox,
+# opens/updates a formula PR, and returns the terminal proof artifact
+# (Gitea terraphim-ai#3382, terraphim-ai#3381).
+
+# Requires: the coordinator dispatches with homebrew_target_repo set to this
+# repository, and its token has Actions/Contents read + repository-dispatch
+# write here. The workflow uses the default GITHUB_TOKEN for the PR.
+
+on:
+  repository_dispatch:
+    types: [terraphim-release]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Release tag, e.g. v1.21.16
+        required: true
+        type: string
+      manifest_sha256:
+        description: Frozen manifest SHA-256
+        required: true
+        type: string
+      correlation_id:
+        description: Coordinator correlation id
+        required: true
+        type: string
+      manifest_url:
+        description: Signed manifest URL (defaults to the terraphim-ai release)
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: homebrew-outbox-${{ github.event.client_payload.release_tag || inputs.release_tag }}
+  cancel-in-progress: false
+
+jobs:
+  homebrew:
+    if: github.event_name != 'repository_dispatch' || github.event.client_payload.channel == 'homebrew_tap_pr'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve the frozen release binding
+        id: resolve
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PAYLOAD: ${{ toJSON(github.event.client_payload) }}
+          INPUT_TAG: ${{ inputs.release_tag }}
+          INPUT_MANIFEST: ${{ inputs.manifest_sha256 }}
+          INPUT_CORR: ${{ inputs.correlation_id }}
+          INPUT_MANIFEST_URL: ${{ inputs.manifest_url }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "repository_dispatch" ]; then
+            tag="$(jq -r '.release_tag // empty' <<<"$PAYLOAD")"
+            manifest="$(jq -r '.manifest_sha256 // empty' <<<"$PAYLOAD")"
+            corr="$(jq -r '.correlation_id // empty' <<<"$PAYLOAD")"
+            jq -c '.assets // []' <<<"$PAYLOAD" > "$RUNNER_TEMP/assets.json"
+          else
+            tag="$INPUT_TAG"
+            manifest="$INPUT_MANIFEST"
+            corr="$INPUT_CORR"
+            printf '[]\n' > "$RUNNER_TEMP/assets.json"
+          fi
+          [ -n "$tag" ] && [ -n "$manifest" ] && [ -n "$corr" ] || { echo "::error::missing release binding in dispatch payload"; exit 1; }
+          url="$INPUT_MANIFEST_URL"
+          if [ -z "$url" ]; then url="https://github.com/terraphim/terraphim-ai/releases/download/$tag/manifest.json"; fi
+          {
+            echo "release_tag=$tag"
+            echo "manifest_sha256=$manifest"
+            echo "correlation_id=$corr"
+            echo "manifest_url=$url"
+          } >> "$GITHUB_OUTPUT"
+      - name: Check out the tap
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Check out Terraphim release tooling
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          repository: terraphim/terraphim-ai
+          ref: ${{ vars.TERRAPHIM_TOOLING_REF || 'main' }}
+          path: .terraphim-tooling
+          fetch-depth: 1
+      - name: Download and verify the signed manifest
+        run: |
+          set -euo pipefail
+          curl -fsSL "${{ steps.resolve.outputs.manifest_url }}" -o "$RUNNER_TEMP/manifest.json"
+          echo "${{ steps.resolve.outputs.manifest_sha256 }}  $RUNNER_TEMP/manifest.json" | sha256sum -c -
+      - name: Render and dispatch the formula PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          bash .terraphim-tooling/scripts/homebrew-outbox.sh \
+            --manifest "$RUNNER_TEMP/manifest.json" \
+            --tap-dir "$GITHUB_WORKSPACE" \
+            --dispatch
+      - name: Build the terminal proof
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 scripts/build-release-proof.py \
+            --channel homebrew_tap_pr \
+            --release-tag "${{ steps.resolve.outputs.release_tag }}" \
+            --manifest-sha256 "${{ steps.resolve.outputs.manifest_sha256 }}" \
+            --correlation-id "${{ steps.resolve.outputs.correlation_id }}" \
+            --assets-json "$(cat "$RUNNER_TEMP/assets.json")" \
+            --outcome success \
+            --output proof.json
+      - name: Upload the terminal proof
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: terraphim-release-proof-${{ steps.resolve.outputs.correlation_id }}-homebrew_tap_pr
+          path: proof.json
+          if-no-files-found: error
