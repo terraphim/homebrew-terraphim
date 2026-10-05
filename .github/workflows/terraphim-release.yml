@@ -79,13 +79,29 @@ jobs:
           } >> "$GITHUB_OUTPUT"
       - name: Check out the tap
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      # The tooling runs with this repo's contents:write token, so pin it to a
+      # reviewed commit instead of a floating branch. The default is the
+      # terraphim-ai commit that landed the Homebrew outbox on GitHub
+      # (terraphim/terraphim-ai#970); set vars.TERRAPHIM_TOOLING_REF to move it.
       - name: Check out Terraphim release tooling
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           repository: terraphim/terraphim-ai
-          ref: ${{ vars.TERRAPHIM_TOOLING_REF || 'main' }}
+          ref: ${{ vars.TERRAPHIM_TOOLING_REF || '42d514fe8809ea39ef45311c3bc237d52344efdd' }}
           path: .terraphim-tooling
           fetch-depth: 1
+      - name: Verify the release tooling is present
+        run: |
+          set -euo pipefail
+          echo "release tooling: terraphim/terraphim-ai@$(git -C .terraphim-tooling rev-parse HEAD)"
+          missing=0
+          for path in scripts/homebrew-outbox.sh scripts/generate-homebrew-formulas.py config/homebrew/formulas.json; do
+            if [ ! -f ".terraphim-tooling/$path" ]; then
+              echo "::error::release tooling is missing $path at the pinned ref; point vars.TERRAPHIM_TOOLING_REF at a terraphim-ai commit that has the Homebrew outbox"
+              missing=1
+            fi
+          done
+          exit "$missing"
       - name: Download and verify the signed manifest
         run: |
           set -euo pipefail
@@ -100,7 +116,12 @@ jobs:
             --manifest "$RUNNER_TEMP/manifest.json" \
             --tap-dir "$GITHUB_WORKSPACE" \
             --dispatch
+      # Once the release binding is known, always answer the coordinator: a
+      # failed run returns outcome "failure" instead of no proof at all.
       - name: Build the terminal proof
+        if: always() && steps.resolve.outcome == 'success'
+        env:
+          OUTCOME: ${{ job.status == 'success' && 'success' || 'failure' }}
         run: |
           set -euo pipefail
           /usr/bin/python3 scripts/build-release-proof.py \
@@ -109,11 +130,12 @@ jobs:
             --manifest-sha256 "${{ steps.resolve.outputs.manifest_sha256 }}" \
             --correlation-id "${{ steps.resolve.outputs.correlation_id }}" \
             --assets-json "$(cat "$RUNNER_TEMP/assets.json")" \
-            --outcome success \
-            --output proof.json
+            --outcome "$OUTCOME" \
+            --output "$RUNNER_TEMP/proof.json"
       - name: Upload the terminal proof
+        if: always() && steps.resolve.outcome == 'success'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: terraphim-release-proof-${{ steps.resolve.outputs.correlation_id }}-homebrew_tap_pr
-          path: proof.json
+          path: ${{ runner.temp }}/proof.json
           if-no-files-found: error
