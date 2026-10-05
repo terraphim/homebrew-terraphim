@@ -87,7 +87,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           repository: terraphim/terraphim-ai
-          ref: ${{ vars.TERRAPHIM_TOOLING_REF || 'd7e3f284108492f6de34d03ed677de512d0b13c9' }}
+          ref: ${{ vars.TERRAPHIM_TOOLING_REF || '42d514fe8809ea39ef45311c3bc237d52344efdd' }}
           path: .terraphim-tooling
           fetch-depth: 1
       - name: Verify the release tooling is present
