@@ -10,14 +10,14 @@ class TerraphimGrep < Formula
     ),
   )
   checksum = on_system_conditional(
-    macos: "bea68873624f55959fbecc9163046ca74e820f3da954e25dfd8992049eb992ff",
+    macos: "6d8c38c5d44e5b4c2b94649f325a13028d365b020cd2df7fade04d998f5450a5",
     linux: on_arch_conditional(
-      arm:   "1b02796312162b59cd0165aa302aa683e8f57b00c72f283ab0bd15d569d3b395",
-      intel: "aec89a77f43db1cf911e761e439a7f9fd3af4ede41066c315910bd8b0272a178",
+      arm:   "3c050c09668775dc709c098ed6bb4ac85493fb69f658848ff1ce4a62824480a9",
+      intel: "f7a9daca8f9bec4d54046fcff6f393587d155be1ba8c873e93b580d25b26e796",
     ),
   )
-  url "https://downloads.terraphim.ai/terraphim-grep/terraphim-grep-1.21.18-#{target}.tar.gz"
-  mirror "https://github.com/terraphim/terraphim-clients/releases/download/v1.21.18/terraphim-grep-1.21.18-#{target}.tar.gz"
+  url "https://downloads.terraphim.ai/terraphim-grep/terraphim-grep-1.21.22-#{target}.tar.gz"
+  mirror "https://github.com/terraphim/terraphim-clients/releases/download/v1.21.22/terraphim-grep-1.21.22-#{target}.tar.gz"
   sha256 checksum
   license "MIT"
 
